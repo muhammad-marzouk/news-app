@@ -1,12 +1,14 @@
 import 'package:bloc/bloc.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'shared/network/remote/dio_helper.dart';
 import 'layout/news_home.dart';
 import 'shared/cubit/bloc_observer.dart';
 
 void main() {
   runApp(const MyApp());
   Bloc.observer = MyBlocObserver();
+  DiaHelper.init();
 }
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -16,8 +18,14 @@ class MyApp extends StatelessWidget {
       debugShowCheckedModeBanner: false,
       title: 'Flutter Demo',
       theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+        // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
+        // primarySwatch: Colors.grey,
+        primaryColorLight: Colors.blue,
+        floatingActionButtonTheme: const FloatingActionButtonThemeData(
+          backgroundColor: Colors.blue,
+        ),
         useMaterial3: true,
+        colorSchemeSeed: Colors.blue, // for CircularProgressIndicator
         scaffoldBackgroundColor: Colors.white,
         appBarTheme: const AppBarTheme(
           titleTextStyle: TextStyle(
@@ -39,7 +47,7 @@ class MyApp extends StatelessWidget {
           ),
           elevation: 0.0,
         ),
-        bottomNavigationBarTheme: BottomNavigationBarThemeData(
+        bottomNavigationBarTheme: const BottomNavigationBarThemeData(
           type: BottomNavigationBarType.fixed,
           selectedItemColor: Colors.blue,
           elevation: 20.0,
