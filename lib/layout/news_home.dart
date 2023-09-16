@@ -1,9 +1,8 @@
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:news_app/shared/cubit/cubit.dart';
-import 'package:news_app/shared/cubit/states.dart';
-import '../shared/network/remote/dio_helper.dart';
+import '../shared/cubit/theme_cubit.dart';
+import '/shared/cubit/cubit.dart';
+import '/shared/cubit/states.dart';
 class NewsLayout extends StatelessWidget {
   const NewsLayout({super.key});
 
@@ -17,11 +16,16 @@ class NewsLayout extends StatelessWidget {
           var cubit = NewsCubit.get(context);
           return Scaffold(
             appBar: AppBar(
-              title: Text('news app'),
+              title: const Text('news app'),
               actions: [
                 IconButton(
                     onPressed: (){},
                     icon: Icon(Icons.search)),
+                IconButton(
+                    onPressed: (){
+                      ThemeCubit.get(context).changeAppMode();
+                    },
+                    icon: Icon(Icons.brightness_4_outlined)),
               ],
             ),
             bottomNavigationBar: BottomNavigationBar(

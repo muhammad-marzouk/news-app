@@ -1,7 +1,8 @@
+import 'package:conditional_builder_null_safety/conditional_builder_null_safety.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-Widget buildArticleItem(article) => Padding(
+Widget buildArticleItem(article, context) => Padding(
       padding: const EdgeInsets.all(20.0),
       child: Row(
         children: [
@@ -29,10 +30,7 @@ Widget buildArticleItem(article) => Padding(
                   Expanded(
                     child: Text(
                       '${article['title']}',
-                      style: const TextStyle(
-                        fontWeight: FontWeight.w600,
-                        fontSize: 18.0,
-                      ),
+                      style: Theme.of(context).textTheme.bodyLarge,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -61,3 +59,25 @@ Widget mySeparator() => Padding(
         color: Colors.grey[300],
       ),
     );
+
+Widget articleBuilder(list) => ConditionalBuilder(
+    condition: list.isNotEmpty,
+    builder: (context) => ListView.separated(
+      // physics: const BouncingScrollPhysics(),
+
+      itemBuilder: (context, index) {
+        if (index % 5==0 && index !=0){
+          return Container(
+            alignment: Alignment.center,
+            width: double.infinity,
+            height: 60.0,
+            child: Text('😛 هحط الاعلان هنا يا ربيع بيتعمل ازاي بقى ',),
+          );
+        }
+        return buildArticleItem(list[index],context);
+      },
+      separatorBuilder: (context, index)=> mySeparator(),
+      itemCount: list.length,
+    ),
+    fallback: (context) => Center(child: CircularProgressIndicator())
+);

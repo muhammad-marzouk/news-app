@@ -1,7 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import '../../modules/settings/settings_screen.dart';
 import '../network/remote/dio_helper.dart';
 import '/modules/business/business_screen.dart';
 import '/shared/cubit/states.dart';
@@ -28,16 +27,11 @@ class NewsCubit extends Cubit<NewsStates> {
       icon: Icon(Icons.science_outlined,),
       label: "Science",
     ),
-    BottomNavigationBarItem(
-      icon: Icon(Icons.settings,),
-      label: "Sittings",
-    ),
   ];
   List<Widget> screen=[
     BusinessScreen(),
     SportsScreen(),
     ScienceScreen(),
-    SettingsScreen(),
   ];
   /*
   عند الضغط على الايكون يتم ارسال رقم الاندكس الحالي لهذه الدالة
@@ -46,10 +40,17 @@ class NewsCubit extends Cubit<NewsStates> {
   */
   void changeBottomNavBar(int index){
     currentNaveBarIndex = index;
+    if (index == 0){
+      getBusiness();
+    }else if (index == 1){
+      getSports();
+    }else if (index == 2){
+      getScience();
+    }
     emit(NewsBottomNavState());
   }
-  List<dynamic> business = [];
 
+  List<dynamic> business = [];
   void getBusiness(){
     emit(NewsGetBusinessLoadingState());
     DiaHelper.getData(
@@ -72,4 +73,54 @@ class NewsCubit extends Cubit<NewsStates> {
       }
     });
   }
+
+  List<dynamic> sports = [];
+  void getSports(){
+    emit(NewsGetSportsLoadingState());
+    DiaHelper.getData(
+        url: 'v2/top-headlines',
+        query: {
+          'country':'us',
+          'category':'Sports',
+          'apiKey':'7a3b28ec14fd41e594b4e89d550beb2e'
+        }
+    ).then((value){
+      if (kDebugMode) {
+        sports = value?.data['articles'];
+        print(sports[0]['title']);
+        emit(NewsGetSportsSuccessState());
+      }
+    }).catchError((error){
+      if (kDebugMode) {
+        print(error.toString());
+        emit(NewsGetSportsErrorState(error.toString()));
+      }
+    });
+  }
+
+  List<dynamic> science = [];
+  void getScience(){
+    emit(NewsGetScienceLoadingState());
+    DiaHelper.getData(
+        url: 'v2/top-headlines',
+        query: {
+          'country':'us',
+          'category':'science',
+          'apiKey':'7a3b28ec14fd41e594b4e89d550beb2e'
+        }
+    ).then((value){
+      if (kDebugMode) {
+        science = value?.data['articles'];
+        print(science[0]['title']);
+        emit(NewsGetScienceSuccessState());
+      }
+    }).catchError((error){
+      if (kDebugMode) {
+        print(error.toString());
+        emit(NewsGetScienceErrorState(error.toString()));
+      }
+    });
+  }
+
+
 }
