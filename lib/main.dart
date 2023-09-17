@@ -3,25 +3,33 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
-import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/theme_cubit.dart';
-import 'shared/cubit/states.dart';
+import 'package:news_app/shared/cubit/theme_states.dart';
+import 'package:news_app/shared/network/local/cache_helper.dart';
 import 'shared/network/remote/dio_helper.dart';
 import 'layout/news_home.dart';
 import 'shared/cubit/bloc_observer.dart';
 
-void main() {
-  runApp(const MyApp());
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
   Bloc.observer = MyBlocObserver();
   DiaHelper.init();
+  await CacheHelper.init();
+
+  bool? isDark = CacheHelper.getData(key: 'isDark');
+  runApp(MyApp(isDark!));
 }
 class MyApp extends StatelessWidget {
-  const MyApp({super.key});
+  final bool isDark;
+  MyApp(this.isDark);
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (BuildContext context) =>ThemeCubit(),
-      child: BlocConsumer<ThemeCubit,NewsStates>(
+      create: (BuildContext context) =>ThemeCubit()..changeAppMode(
+        fromShared :isDark,
+      ),
+      child: BlocConsumer<ThemeCubit,ThemeStates>(
         listener:(context,state) {},
         builder: (context,state) {
           return MaterialApp(
@@ -30,7 +38,9 @@ class MyApp extends StatelessWidget {
             theme: ThemeData(
               // colorScheme: ColorScheme.fromSeed(seedColor: Colors.blue),
               // primarySwatch: Colors.grey,
-              primaryColorLight: Colors.blue,
+              primaryColorLight: Colors.white,
+              primaryColorDark: Colors.white,
+
               floatingActionButtonTheme: const FloatingActionButtonThemeData(
                 backgroundColor: Colors.blue,
               ),
@@ -38,6 +48,7 @@ class MyApp extends StatelessWidget {
               colorSchemeSeed: Colors.blue, // for CircularProgressIndicator
               scaffoldBackgroundColor: Colors.white,
               appBarTheme: const AppBarTheme(
+                titleSpacing: 20.0,
                 titleTextStyle: TextStyle(
                   color: Colors.black,
                   fontSize: 20.0,
@@ -64,8 +75,8 @@ class MyApp extends StatelessWidget {
                 elevation: 20.0,
                 backgroundColor: Colors.white,
               ),
-              textTheme: TextTheme(
-                bodyLarge: TextStyle(
+              textTheme: const TextTheme(
+                bodyText1: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.black,
@@ -81,7 +92,8 @@ class MyApp extends StatelessWidget {
               colorSchemeSeed: Colors.blue, // for CircularProgressIndicator
               scaffoldBackgroundColor: HexColor('333739'),
               appBarTheme: AppBarTheme(
-                titleTextStyle: TextStyle(
+                titleSpacing: 20.0,
+                titleTextStyle: const TextStyle(
                   color: Colors.white,
                   fontSize: 20.0,
                   fontWeight: FontWeight.bold,
@@ -91,11 +103,11 @@ class MyApp extends StatelessWidget {
                   statusBarIconBrightness: Brightness.light,
                 ),
                 backgroundColor: HexColor('333739'),
-                actionsIconTheme: IconThemeData(
+                actionsIconTheme: const IconThemeData(
                   color: Colors.white,
                   size: 30.0,
                 ),
-                iconTheme:  IconThemeData(
+                iconTheme:  const IconThemeData(
                   color: Colors.white,
                 ),
                 elevation: 0.0,
@@ -107,8 +119,8 @@ class MyApp extends StatelessWidget {
                 elevation: 20.0,
                 backgroundColor: HexColor('333739'),
               ),
-              textTheme: TextTheme(
-                bodyLarge: TextStyle(
+              textTheme: const TextTheme(
+                bodyText1: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w600,
                   color: Colors.white,
@@ -116,8 +128,8 @@ class MyApp extends StatelessWidget {
               ),
 
             ),
-            // themeMode: ThemeCubit.get(context).isDark? ThemeMode.dark: ThemeMode.light,
-            themeMode: ThemeMode.light,
+            themeMode: ThemeCubit.get(context).isDark? ThemeMode.dark: ThemeMode.light,
+            // themeMode: ThemeMode.light,
             home: const NewsLayout(),
           );
         },

@@ -30,7 +30,7 @@ Widget buildArticleItem(article, context) => Padding(
                   Expanded(
                     child: Text(
                       '${article['title']}',
-                      style: Theme.of(context).textTheme.bodyLarge,
+                      style: Theme.of(context).textTheme.bodyText1,
                       maxLines: 3,
                       overflow: TextOverflow.ellipsis,
                     ),
@@ -60,21 +60,23 @@ Widget mySeparator() => Padding(
       ),
     );
 
-Widget articleBuilder(list) => ConditionalBuilder(
+Widget articleListBuilder(list,context2) => ConditionalBuilder(
     condition: list.isNotEmpty,
     builder: (context) => ListView.separated(
       // physics: const BouncingScrollPhysics(),
-
       itemBuilder: (context, index) {
         if (index % 5==0 && index !=0){
           return Container(
             alignment: Alignment.center,
             width: double.infinity,
             height: 60.0,
-            child: Text('😛 هحط الاعلان هنا يا ربيع بيتعمل ازاي بقى ',),
+            child: Text(
+              '😛 هحط الاعلان هنا يا ربيع بيتعمل ازاي بقى ',
+              style: Theme.of(context).textTheme.bodyText1,
+            ),
           );
         }
-        return buildArticleItem(list[index],context);
+        return buildArticleItem(list[index],context2);
       },
       separatorBuilder: (context, index)=> mySeparator(),
       itemCount: list.length,

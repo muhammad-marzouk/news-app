@@ -16,28 +16,7 @@ class BusinessScreen extends StatelessWidget {
       listener: (context, state) {},
       builder: (context, state) {
         var list = NewsCubit.get(context).business;
-        print(list.length);
-        return ConditionalBuilder(
-            condition: list.isNotEmpty,
-            builder: (context) => ListView.separated(
-              // physics: const BouncingScrollPhysics(),
-
-              itemBuilder: (context, index) {
-                if (index % 5==0 && index !=0){
-                  return Container(
-                    alignment: Alignment.center,
-                    width: double.infinity,
-                    height: 60.0,
-                    child: Text('😛 هحط الاعلان هنا يا ربيع بيتعمل ازاي بقى ',),
-                  );
-                }
-                return buildArticleItem(list[index],context);
-                },
-              separatorBuilder: (context, index)=> mySeparator(),
-              itemCount: list.length,
-            ),
-            fallback: (context) => Center(child: CircularProgressIndicator())
-        );
+        return articleListBuilder(list,context);
         }
     );
   }
