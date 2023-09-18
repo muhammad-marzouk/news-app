@@ -19,8 +19,8 @@ void main() async {
   DiaHelper.init();
 
 
-  bool isDark = CacheHelper.getData(key: 'isDark');
-  runApp(MyApp(true));
+  // bool isDark = CacheHelper.getData(key: 'isDark');
+  runApp(MyApp(false));
 }
 class MyApp extends StatelessWidget {
   final bool isDark;
