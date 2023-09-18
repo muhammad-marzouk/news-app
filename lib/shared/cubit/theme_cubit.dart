@@ -12,9 +12,9 @@ class ThemeCubit extends Cubit<ThemeStates> {
     if(fromShared != null) {
       isDark = fromShared;
       emit(NewsChangeModeState());
-    }else {
+    }else{
       isDark = !isDark;
-      CacheHelper.putData(key: 'isd=Dark', value: isDark).then((value){
+      CacheHelper.putData(key: 'isDark', value: isDark).then((value){
         emit(NewsChangeModeState());
       });
     }

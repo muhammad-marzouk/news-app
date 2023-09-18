@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:hexcolor/hexcolor.dart';
+import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/theme_cubit.dart';
 import 'package:news_app/shared/cubit/theme_states.dart';
 import 'package:news_app/shared/network/local/cache_helper.dart';
@@ -12,23 +13,32 @@ import 'shared/cubit/bloc_observer.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
+  await CacheHelper.init();
 
   Bloc.observer = MyBlocObserver();
   DiaHelper.init();
-  await CacheHelper.init();
 
-  bool? isDark = CacheHelper.getData(key: 'isDark');
-  runApp(MyApp(isDark!));
+
+  bool isDark = CacheHelper.getData(key: 'isDark');
+  runApp(MyApp(true));
 }
 class MyApp extends StatelessWidget {
   final bool isDark;
   MyApp(this.isDark);
   @override
   Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (BuildContext context) =>ThemeCubit()..changeAppMode(
-        fromShared :isDark,
-      ),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (context) => NewsCubit()..getBusiness(),
+        ),
+        BlocProvider(
+          create: (BuildContext context) => ThemeCubit()
+            ..changeAppMode(
+              fromShared: isDark,
+            ),
+        ),
+      ],
       child: BlocConsumer<ThemeCubit,ThemeStates>(
         listener:(context,state) {},
         builder: (context,state) {

@@ -15,23 +15,23 @@ class NewsCubit extends Cubit<NewsStates> {
 
   // naveBar Items widget
   List<BottomNavigationBarItem> naveBarBottomItems = [
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.business_outlined,),
       label: "Business",
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.sports_sharp,),
       label: "Sports",
     ),
-    BottomNavigationBarItem(
+    const BottomNavigationBarItem(
       icon: Icon(Icons.science_outlined,),
       label: "Science",
     ),
   ];
   List<Widget> screen=[
-    BusinessScreen(),
-    SportsScreen(),
-    ScienceScreen(),
+    const BusinessScreen(),
+    const SportsScreen(),
+    const ScienceScreen(),
   ];
   /*
   عند الضغط على الايكون يتم ارسال رقم الاندكس الحالي لهذه الدالة
@@ -122,5 +122,26 @@ class NewsCubit extends Cubit<NewsStates> {
     });
   }
 
+  List<dynamic> search = [];
+
+  void getSearch(String value)
+  {
+    emit(NewsSearchLoadingState());
+    DiaHelper.getData(
+      url: 'v2/everything',
+      query:
+      {
+        'q':value,
+        'apiKey':'7a3b28ec14fd41e594b4e89d550beb2e',
+      },
+    ).then((value)
+    {
+      //print(value.data['articles'][0]['title']);
+      search = value?.data['articles'];
+      emit(NewsSearchSuccessState());
+    }).catchError((error){
+      emit(NewsSearchErrorState(error.toString()));
+    });
+  }
 
 }
