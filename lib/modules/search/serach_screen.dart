@@ -5,7 +5,9 @@ import 'package:news_app/shared/cubit/cubit.dart';
 import 'package:news_app/shared/cubit/states.dart';
 
 class SearchScreen extends StatelessWidget {
-  var searchController = TextEditingController();
+  final searchController = TextEditingController();
+
+  SearchScreen({super.key});
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<NewsCubit, NewsStates>(
@@ -30,7 +32,7 @@ class SearchScreen extends StatelessWidget {
                     }
                     return null;
                   },
-                  decoration: InputDecoration(
+                  decoration: const InputDecoration(
                     labelText: 'Search',
                     prefixIcon: Icon(Icons.search),
                   ),
