@@ -90,6 +90,7 @@ Widget articleListBuilder(list,context2,{isSearch = false}) => ConditionalBuilde
     ),
     fallback: (context) => isSearch ? Container(): Center(child: CircularProgressIndicator())
 );
+
 void navigateTo(context, widget) => Navigator.push(
   context,
   MaterialPageRoute(
